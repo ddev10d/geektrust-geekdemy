@@ -4,33 +4,34 @@ using System.Collections.Generic;
 
 namespace GeekTrust
 {
+    public class Programmes
+    {
+
+    }
+    
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                Console.WriteLine("here1");
                 string[] commands = File.ReadAllLines(args[0]);
-                Console.WriteLine("here2");
-                List<string> operands = new List<string>();
-                List<string> operators = new List<string>();
-                foreach (string command in commands)
+                ShoppingCart shoppingCart = new ShoppingCart();
+                foreach(string command in commands)
                 {
-                    if(command.Split(" ")[0] == "PRINT_BILL")
+                    if(command.Split(" ")[0] == "ADD_PROGRAMME")
                     {
-                        continue;
+                        shoppingCart.AddProgramme(command.Split(" ")[1], Convert.ToInt32(command.Split(" ")[2]));
                     }
-                    operands.Add(command.Split(" ")[0]);
-                    operators.Add(command.Split(" ")[1]);
-                }
-                foreach (string operand in operands)
-                {
-                    Console.WriteLine(operand);
-                }
-                foreach (string operato in operators)
-                {
-                    Console.WriteLine(operato);
+                    if(command.Split(" ")[0] == "APPLY_COUPON")
+                    {
+                        shoppingCart.ApplyCoupon(command.Split(" ")[1]);
+                    }
+                    if(command.Split(" ")[0] == "ADD_PRO_MEMBERSHIP")
+                    {
+                        shoppingCart.AddProMembership();
+                    }
+
                 }
                 //Add your code here to process the input commands
 

@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Invoice
 {
@@ -32,32 +33,7 @@ public class Invoice
 
 // create an invoice
 
-public abstract class Programme
-{
-    public string Category { get; set; }
-    public int Cost { get; set; }
 
-    protected Programme(string category, int cost)
-    {
-        Category = category;
-        Cost = cost;
-    }
-}
-
-public class Certification : Programme
-{
-    public Certification() : base("CERTIFICATION", 3000) { }
-}
-
-public class Degree : Programme
-{
-    public Degree() : base("DEGREE", 5000) { }
-}
-
-public class Diploma : Programme
-{
-    public Diploma() : base("DIPLOMA", 2500) { }
-}
 
 public abstract class Coupon
 {
@@ -98,11 +74,11 @@ public class ShoppingCart
 
     public decimal GetDiscountedTotal()
     {
-        // decimal total = Programmes.Sum(p => p.Cost);
-        // if (Coupon != null)
-        // {
-        //     total -= total * Coupon.DiscountPercentage / 100;
-        // }
+        decimal total = Programmes.Sum(p => p.Cost);
+        if (Coupon != null)
+        {
+            total -= total * Coupon.DiscountPercentage / 100;
+        }
 
         return 9;
     }
@@ -306,39 +282,7 @@ namespace Geekdemy
             Console.WriteLine("Total: " + (total - proMembershipDiscount - couponDiscount));
         }
     }
-    public class Invoker
-    {
-
-        private List<ICommand> _commands = new List<ICommand>();
-
-        public void AddProgramme(string category, int quantity)
-        {
-            _commands.Add(new AddProgrammeCommand(category, quantity));
-        }
-
-        public void ApplyCoupon(string couponName)
-        {
-            _commands.Add(new ApplyCouponCommand(couponName));
-        }
-
-        public void AddProMembership()
-        {
-            _commands.Add(new AddProMembershipCommand());
-        }
-
-        public void PrintBill()
-        {
-            _commands.Add(new PrintBillCommand());
-        }
-
-        public void PlaceOrders()
-        {
-            foreach (var command in _commands)
-            {
-                command.Execute();
-            }
-        }
-    }
+    
     abstract class Command
     {
         protected Receiver receiver;
@@ -348,23 +292,7 @@ namespace Geekdemy
         }
         public abstract void Execute();
     }
-    //public class AddProgrammeCommand : ICommand
-    //{
-    //    private readonly string _category;
-    //    private readonly int _quantity;
-    //    private readonly OnlineProgramme _onlineProgramme;
-    //    public AddProgrammeCommand(string category, int quantity, OnlineProgramme onlineProgramme)
-    //    {
-    //        _category = category;
-    //        _quantity = quantity;
-    //        _onlineProgramme = onlineProgramme;
-    //    }
-
-    //    public void Execute()
-    //    {
-    //        _onlineProgramme.AddProgramme(_category, _quantity);
-    //    }
-    //}
+   
     class AddProgrammeCommand : Command
     {
         private Dictionary<string, int> programmes;
