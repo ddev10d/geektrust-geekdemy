@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeekTrust.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -106,5 +107,13 @@ namespace GeekTrust
 
             Console.WriteLine("Sub Total: {0}", total);
         }
+    }
+    public class ShoppingCart2
+    {
+        private List<Programmes> _programmes = new List<Programmes>();
+        private Coupon _couponApplied;
+
+        public float SubTotal() { return 45.0f; }
+        public 
     }
 }

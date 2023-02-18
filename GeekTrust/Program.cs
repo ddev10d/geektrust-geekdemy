@@ -22,6 +22,7 @@ namespace GeekTrust
                     if(command.Split(" ")[0] == "ADD_PROGRAMME")
                     {
                         shoppingCart.AddProgramme(command.Split(" ")[1], Convert.ToInt32(command.Split(" ")[2]));
+                        //processCommandsWithOperands(
                     }
                     if(command.Split(" ")[0] == "APPLY_COUPON")
                     {
