@@ -8,6 +8,7 @@ namespace GeekTrust.Models
     {
         public string Code { get; set; }
         public float DiscountPercentage { get; set; }
+        public string CouponType { get; }
 
         protected Coupon(string code, float discountPercentage)
         {
@@ -23,5 +24,9 @@ namespace GeekTrust.Models
     public class DealG5 : Coupon
     {
         public DealG5() : base("DEAL_G5", 0.1f) { }
+    }
+    public class B41G : Coupon
+    {
+        public B41G() : base("B4G1", 0.0f) { }
     }
 }

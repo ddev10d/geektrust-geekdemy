@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GeekTrust": {
+      "commandName": "Project",
+      "commandLineArgs": "../../../sample_input/input1.txt"
+    }
+  }
+}

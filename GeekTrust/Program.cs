@@ -1,47 +1,39 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace GeekTrust
 {
-    public class Programmes
-    {
-
-    }
-    
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                string[] commands = File.ReadAllLines(args[0]);
-                ShoppingCart shoppingCart = new ShoppingCart();
-                foreach(string command in commands)
-                {
-                    if(command.Split(" ")[0] == "ADD_PROGRAMME")
-                    {
-                        shoppingCart.AddProgramme(command.Split(" ")[1], Convert.ToInt32(command.Split(" ")[2]));
-                        //processCommandsWithOperands(
-                    }
-                    if(command.Split(" ")[0] == "APPLY_COUPON")
-                    {
-                        shoppingCart.ApplyCoupon(command.Split(" ")[1]);
-                    }
-                    if(command.Split(" ")[0] == "ADD_PRO_MEMBERSHIP")
-                    {
-                        shoppingCart.AddProMembership();
-                    }
-
-                }
+                string filePath = args[0];
+                ReadFromFile readFromFile = new ReadFromFile(filePath);
+                ShoppingCart cart = new ShoppingCart();
+                List<Command> inputData = readFromFile.commandList();
                 //Add your code here to process the input commands
-
+                List<String> outputs = inputData.Select(command => command
+                                                                    ._operator
+                                                                    ._operationService
+                                                                    .processOperation(command.operands, cart))
+                                                                    .ToList();
+                //foreach(string output in outputs)
+                //{
+                //    Console.WriteLine(output);
+                //}
+                //Console.WriteLine(inputData[0].operator);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.ReadLine();
             }
+
+
         }
     }
 }

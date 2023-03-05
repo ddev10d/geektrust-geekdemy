@@ -6,8 +6,4 @@
     <AssemblyName>geektrust</AssemblyName>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="example.cs" />
-  </ItemGroup>
-
 </Project>
