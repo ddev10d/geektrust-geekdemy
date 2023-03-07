@@ -8,13 +8,13 @@ namespace GeekTrust
     public class ShoppingCart
     {
         public List<Programme> programmes = new List<Programme>();
-        public Coupon appliedCoupon;
+        public List<Coupon> appliedCoupon = new List<Coupon>();
         public bool IsProMember=false;
         private decimal SubTotal;
         private decimal TotalProDiscount;
         private decimal EnrollmentFee;
         private decimal Total;
-        
+        private Bill bill;
 
         public string AddProgrammes(string programmeCategory, int count)
         {
@@ -38,12 +38,13 @@ namespace GeekTrust
         }
         public string AddCoupon(string couponType)
         {
-            appliedCoupon = couponType switch
+            Coupon appliedCoupon = couponType switch
             {
                 "DEAL_G20" => new DealG20(),
                 "DEAL_G5" => new DealG5(),
                 _ => throw new ArgumentException("invalid coupon category.")
             };
+
             return "Coupon Applied";
         }
         public string AddProMembership()

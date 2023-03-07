@@ -1,4 +1,5 @@
-﻿using GeekTrust.Models;
+﻿using GeekTrust;
+using GeekTrust.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,23 +44,29 @@ namespace GeekTrust
             return cart.IsProMember ? subtotalWithoutProMembershipFees + 200 : subtotalWithoutProMembershipFees;
             throw new NotImplementedException();
         }
-        internal decimal CalculateCouponDiscount(decimal subTotal)
-        {   
-            if(cart.programmes.Count >= 4)
-            {
-                 cart.appliedCoupon = new B41G();
-                 return ShoppingCart.GetCostOfCheapestProgramme(cart.programmes);
-            }
-            if(cart.appliedCoupon is DealG20 && subTotal >= 10000)
-            {
-                return subTotal * 0.20m;
-            }
-            if(cart.appliedCoupon is DealG5 && cart.programmes.Count >= 2)
-            {
-                return subTotal * 0.05m;
-            }
+        internal decimal GetCouponDiscount(decimal subTotal)
+        {
+            //if(cart.programmes.Count >= 4)
+            //{
+            //     cart.appliedCoupon = new B41G();
+            //     return ShoppingCart.GetCostOfCheapestProgramme(cart.programmes);
+            //}
+            //if(cart.appliedCoupon is DealG20 && subTotal >= 10000)
+            //{
+            //    return subTotal * 0.20m;
+            //}
+            //if(cart.appliedCoupon is DealG5 && cart.programmes.Count >= 2)
+            //{
+            //    return subTotal * 0.05m;
+            //}
+
+            Coupon coupon = GetBestValueCoupon();
             return 0;
             throw new NotImplementedException();
+        }
+        public Coupon GetBestValueCoupon(ShoppingCart cart, decimal Subtotal)
+        {
+            
         }
         public decimal getProMembershipFee()
         {
@@ -81,7 +88,7 @@ namespace GeekTrust
         {
             decimal ProMembershipDiscount = CalculateTotalProDiscount();
             decimal SubTotal = CalculateSubtotal(ProMembershipDiscount);
-            decimal couponDiscount = CalculateCouponDiscount(SubTotal);
+            decimal couponDiscount = GetCouponDiscount(SubTotal);
             decimal enrollmentFees = CalculateEnrollmentFees(SubTotal-couponDiscount);
             decimal grandTotal = SubTotal - couponDiscount + enrollmentFees;
 
@@ -96,3 +103,22 @@ namespace GeekTrust
         }
     }
 }
+
+/* CalculateCouponDiscount: ShoppingCart, Coupon => couponDiscount
+    step - 1 get the applied coupon on the cart
+    step-2 Calculate coupon discount as per rules
+ coupon is calculated on the subtotal of the cart, in that case it's not necessary to pass the whole ShoppingCart
+ object to the coupon. 
+
+
+ Higher Valued Coupon: (ShoppingCart, List<Coupon>) => Coupon
+
+regarding the input of coupons on the shopping cart, multiple coupons can be applied, we need to store each of the
+applied coupons in a list, since we can't decide beforehand which one is high value.
+
+
+
+
+
+
+*/
