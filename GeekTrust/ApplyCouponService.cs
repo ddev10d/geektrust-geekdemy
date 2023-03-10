@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GeekTrust
 {
@@ -13,7 +14,13 @@ namespace GeekTrust
 
         public string processOperation(List<string> operands, ShoppingCart cart)
         {
-            string couponType = operands[0];
+            string couponType = "";
+            if (cart.programmes.Count >= 4)
+            {
+                couponType = "B4G1";
+                return cart.AddCoupon(couponType);
+            }
+            couponType = operands[0];
             return cart.AddCoupon(couponType);           
             throw new NotImplementedException();
         }

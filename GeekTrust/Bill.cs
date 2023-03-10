@@ -38,13 +38,15 @@ namespace GeekTrust
             totalCost -= discount;
             return totalCost;
         }
-        internal decimal CalculateSubtotal(decimal discountedCost)
+        internal ShoppingCart CalculateSubtotal(decimal discountedCost)
         {   
             decimal subtotalWithoutProMembershipFees = CalculateTotalCost(discountedCost);
-            return cart.IsProMember ? subtotalWithoutProMembershipFees + 200 : subtotalWithoutProMembershipFees;
+            decimal subtotalWithProMemberShip = subtotalWithoutProMembershipFees + cart.ProMemberShipFees();
+            cart.SetSubTotal(subtotalWithProMemberShip); 
+            return cart;
             throw new NotImplementedException();
         }
-        internal decimal GetCouponDiscount(decimal subTotal)
+        internal decimal ApplyCouponDiscount(ShoppingCart cart)
         {
             //if(cart.programmes.Count >= 4)
             //{
@@ -60,13 +62,33 @@ namespace GeekTrust
             //    return subTotal * 0.05m;
             //}
 
-            Coupon coupon = GetBestValueCoupon();
-            return 0;
+            decimal couponDiscount = GetBestValueCoupon(cart);
+            return couponDiscount;
             throw new NotImplementedException();
         }
-        public Coupon GetBestValueCoupon(ShoppingCart cart, decimal Subtotal)
+        public decimal GetBestValueCoupon(ShoppingCart cart)
         {
-            
+            List<decimal> discountAmounts = new List<decimal>();
+            if(cart.appliedCoupons.Count < 1)
+            {
+                Coupon coupon = new B41G();
+                coupon.IsCouponApplicable(cart);
+                return coupon.getDiscountAmount(cart);
+            }
+            foreach(Coupon coupon in cart.appliedCoupons)
+            {
+                if (coupon.IsCouponApplicable(cart))
+                {
+                    discountAmounts.Add(coupon.getDiscountAmount(cart));
+                }
+            }
+           
+            discountAmounts.Sort();
+            if (discountAmounts.Count < 1)
+            {
+                return 0.0m;
+            }
+            return discountAmounts.Last();
         }
         public decimal getProMembershipFee()
         {
@@ -87,13 +109,18 @@ namespace GeekTrust
         public string generateBill()
         {
             decimal ProMembershipDiscount = CalculateTotalProDiscount();
-            decimal SubTotal = CalculateSubtotal(ProMembershipDiscount);
-            decimal couponDiscount = GetCouponDiscount(SubTotal);
-            decimal enrollmentFees = CalculateEnrollmentFees(SubTotal-couponDiscount);
-            decimal grandTotal = SubTotal - couponDiscount + enrollmentFees;
+            //Discount promembershipdiscount = new ProMembershipDiscount(cart);
+            //decimal ProMembershipdiscountamount = promembershipdiscount.DiscountCalculation();
+            CalculateSubtotal(ProMembershipDiscount);
+            decimal couponDiscount = ApplyCouponDiscount(cart);
+            decimal enrollmentFees = CalculateEnrollmentFees(cart.GetSubtotal()-couponDiscount);
+            decimal grandTotal = cart.GetSubtotal()- couponDiscount + enrollmentFees;
+            string couponName = couponDiscount == 0 ? "NONE" : cart.appliedCoupons.First().Code;
 
-            Console.WriteLine("SUB_TOTAL {0:0.00}", SubTotal);
-            Console.WriteLine("COUPON_DISCOUNT {0} {1:0.00}", cart.appliedCoupon?.Code.ToString(), couponDiscount);
+
+
+            Console.WriteLine("SUB_TOTAL {0:0.00}", cart.GetSubtotal());
+            Console.WriteLine("COUPON_DISCOUNT {0} {1:0.00}", couponName , couponDiscount);
             Console.WriteLine("TOTAL_PRO_DISCOUNT {0:0.00}", ProMembershipDiscount);
             Console.WriteLine("PRO_MEMBERSHIP_FEE {0:0.00}", getProMembershipFee());
             Console.WriteLine("ENROLLMENT_FEE {0:0.00}", enrollmentFees);

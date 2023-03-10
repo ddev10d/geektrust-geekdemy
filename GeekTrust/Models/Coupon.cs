@@ -16,23 +16,23 @@ namespace GeekTrust.Models
             Code = code;
             DiscountPercentage = discountPercentage;
         }
-        public abstract bool IsCouponApplicable(ShoppingCart cart, decimal Subtotal);
-        public abstract decimal getDiscountAmount(ShoppingCart cart, decimal Subtotal);
+        public abstract bool IsCouponApplicable(ShoppingCart cart);
+        public abstract decimal getDiscountAmount(ShoppingCart cart);
     }
 
     public class DealG20 : Coupon
     {
         public DealG20() : base("DEAL_G20", 0.2m) { }
 
-        public override decimal getDiscountAmount(ShoppingCart cart, decimal Subtotal)
+        public override decimal getDiscountAmount(ShoppingCart cart)
         {
-            return (decimal)(Subtotal * DiscountPercentage);
+            return (decimal)(cart.GetSubtotal() * DiscountPercentage);
             throw new System.NotImplementedException();
         }
 
-        public override bool IsCouponApplicable(ShoppingCart cart, decimal Subtotal)
+        public override bool IsCouponApplicable(ShoppingCart cart)
         {
-            return Subtotal >= 10000;
+            return cart.GetSubtotal() >= 10000;
             throw new System.NotImplementedException();
         }
     }
@@ -40,13 +40,13 @@ namespace GeekTrust.Models
     {
         public DealG5() : base("DEAL_G5", 0.1m) { }
 
-        public override decimal getDiscountAmount(ShoppingCart cart, decimal Subtotal)
+        public override decimal getDiscountAmount(ShoppingCart cart)
         {
-            return (decimal)(Subtotal * DiscountPercentage);
+            return (decimal)(cart.GetSubtotal() * DiscountPercentage);
             throw new System.NotImplementedException();
         }
 
-        public override bool IsCouponApplicable(ShoppingCart cart, decimal Subtotal)
+        public override bool IsCouponApplicable(ShoppingCart cart)
         {
             return cart.programmes.Count >= 2;
             throw new System.NotImplementedException();
@@ -56,18 +56,18 @@ namespace GeekTrust.Models
     {
         public B41G() : base("B4G1", null) { }
 
-        public override decimal getDiscountAmount(ShoppingCart cart, decimal Subtotal)
+        public override decimal getDiscountAmount(ShoppingCart cart)
         {
             Programme programme = cart.programmes.OrderBy(o => o.Cost).First();
             if (cart.IsProMember)
             {
-                return programme.Cost * programme.ProMemberShipDiscount;
+                return programme.Cost * (1-programme.ProMemberShipDiscount);
             }
             return programme.Cost; 
             throw new System.NotImplementedException();
         }
 
-        public override bool IsCouponApplicable(ShoppingCart cart, decimal Subtotal)
+        public override bool IsCouponApplicable(ShoppingCart cart)
         {
             return cart.programmes.Count >= 4;
             throw new System.NotImplementedException();

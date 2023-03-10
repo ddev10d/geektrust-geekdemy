@@ -8,14 +8,17 @@ namespace GeekTrust
     public class ShoppingCart
     {
         public List<Programme> programmes = new List<Programme>();
-        public List<Coupon> appliedCoupon = new List<Coupon>();
+        public List<Coupon> appliedCoupons = new List<Coupon>();
         public bool IsProMember=false;
         private decimal SubTotal;
         private decimal TotalProDiscount;
         private decimal EnrollmentFee;
         private decimal Total;
         private Bill bill;
-
+        public void SetSubTotal(decimal amount)
+        {
+            this.SubTotal = amount;
+        }
         public string AddProgrammes(string programmeCategory, int count)
         {
             for (int i = 0; i < count; i++)
@@ -42,9 +45,10 @@ namespace GeekTrust
             {
                 "DEAL_G20" => new DealG20(),
                 "DEAL_G5" => new DealG5(),
+                "B4G1" => new B41G(),
                 _ => throw new ArgumentException("invalid coupon category.")
             };
-
+            appliedCoupons.Add(appliedCoupon);
             return "Coupon Applied";
         }
         public string AddProMembership()
@@ -59,6 +63,19 @@ namespace GeekTrust
             Bill bill = new Bill(cart);
 
             return bill.generateBill();
+        }
+
+        internal decimal ProMemberShipFees()
+        {
+            if (IsProMember) return 200;
+            return 0;
+            throw new NotImplementedException();
+        }
+
+        internal decimal GetSubtotal()
+        {
+            return SubTotal;
+            throw new NotImplementedException();
         }
     }
 }
