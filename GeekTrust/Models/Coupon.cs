@@ -38,7 +38,7 @@ namespace GeekTrust.Models
     }
     public class DealG5 : Coupon
     {
-        public DealG5() : base("DEAL_G5", 0.1m) { }
+        public DealG5() : base("DEAL_G5", 0.05m) { }
 
         public override decimal getDiscountAmount(ShoppingCart cart)
         {

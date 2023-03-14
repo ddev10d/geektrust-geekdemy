@@ -46,7 +46,7 @@ namespace GeekTrust
             return cart;
             throw new NotImplementedException();
         }
-        internal decimal ApplyCouponDiscount(ShoppingCart cart)
+        internal (decimal amount, string code) ApplyCouponDiscount(ShoppingCart cart)
         {
             //if(cart.programmes.Count >= 4)
             //{
@@ -62,33 +62,40 @@ namespace GeekTrust
             //    return subTotal * 0.05m;
             //}
 
-            decimal couponDiscount = GetBestValueCoupon(cart);
-            return couponDiscount;
+            return GetBestValueCoupon(cart);
             throw new NotImplementedException();
         }
-        public decimal GetBestValueCoupon(ShoppingCart cart)
+        public (decimal amount, string code) GetBestValueCoupon(ShoppingCart cart)
         {
             List<decimal> discountAmounts = new List<decimal>();
+            decimal maxCouponDiscount = 0;
+            string maxCouponDicountCode = "";
+
             if(cart.appliedCoupons.Count < 1)
             {
                 Coupon coupon = new B41G();
                 coupon.IsCouponApplicable(cart);
-                return coupon.getDiscountAmount(cart);
+                return (coupon.getDiscountAmount(cart), "B41G");
             }
             foreach(Coupon coupon in cart.appliedCoupons)
             {
                 if (coupon.IsCouponApplicable(cart))
                 {
                     discountAmounts.Add(coupon.getDiscountAmount(cart));
+                    if(coupon.getDiscountAmount(cart) > maxCouponDiscount)
+                    {
+                        maxCouponDiscount = coupon.getDiscountAmount(cart);
+                        maxCouponDicountCode = coupon.Code;
+                    }
                 }
             }
            
-            discountAmounts.Sort();
             if (discountAmounts.Count < 1)
             {
-                return 0.0m;
+                return (0.0m, "");
             }
-            return discountAmounts.Last();
+            discountAmounts.Sort();
+            return (maxCouponDiscount, maxCouponDicountCode);
         }
         public decimal getProMembershipFee()
         {
@@ -112,10 +119,10 @@ namespace GeekTrust
             //Discount promembershipdiscount = new ProMembershipDiscount(cart);
             //decimal ProMembershipdiscountamount = promembershipdiscount.DiscountCalculation();
             CalculateSubtotal(ProMembershipDiscount);
-            decimal couponDiscount = ApplyCouponDiscount(cart);
+            (decimal couponDiscount, string couponCode) = ApplyCouponDiscount(cart);
             decimal enrollmentFees = CalculateEnrollmentFees(cart.GetSubtotal()-couponDiscount);
             decimal grandTotal = cart.GetSubtotal()- couponDiscount + enrollmentFees;
-            string couponName = couponDiscount == 0 ? "NONE" : cart.appliedCoupons.First().Code;
+            string couponName = couponDiscount == 0 ? "NONE" : couponCode;
 
 
 
@@ -130,22 +137,3 @@ namespace GeekTrust
         }
     }
 }
-
-/* CalculateCouponDiscount: ShoppingCart, Coupon => couponDiscount
-    step - 1 get the applied coupon on the cart
-    step-2 Calculate coupon discount as per rules
- coupon is calculated on the subtotal of the cart, in that case it's not necessary to pass the whole ShoppingCart
- object to the coupon. 
-
-
- Higher Valued Coupon: (ShoppingCart, List<Coupon>) => Coupon
-
-regarding the input of coupons on the shopping cart, multiple coupons can be applied, we need to store each of the
-applied coupons in a list, since we can't decide beforehand which one is high value.
-
-
-
-
-
-
-*/
