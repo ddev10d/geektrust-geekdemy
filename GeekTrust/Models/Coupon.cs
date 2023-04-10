@@ -10,7 +10,9 @@ namespace GeekTrust.Models
        
         public decimal? DiscountPercentage { get; set; }
         public decimal discountAmount { get; }
-        
+        protected const decimal DEALG20_DISCOUNT_PERCENTAGE = 0.2m;
+        protected const decimal DEALG5_DISCOUNT_PERCENTAGE = 0.05m;
+
         protected Coupon(string code, decimal? discountPercentage)
         {
             Code = code;
@@ -22,7 +24,7 @@ namespace GeekTrust.Models
 
     public class DealG20 : Coupon
     {
-        public DealG20() : base("DEAL_G20", 0.2m) { }
+        public DealG20() : base("DEAL_G20", DEALG20_DISCOUNT_PERCENTAGE) { }
 
         public override decimal getDiscountAmount(ShoppingCart cart)
         {
@@ -38,7 +40,7 @@ namespace GeekTrust.Models
     }
     public class DealG5 : Coupon
     {
-        public DealG5() : base("DEAL_G5", 0.05m) { }
+        public DealG5() : base("DEAL_G5", DEALG5_DISCOUNT_PERCENTAGE) { }
 
         public override decimal getDiscountAmount(ShoppingCart cart)
         {

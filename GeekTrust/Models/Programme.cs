@@ -8,6 +8,9 @@ namespace GeekTrust.Models
     {
         public string Category { get; set; }
         public decimal Cost { get; set; }
+        protected const int CERTIFICATION_COST = 3000;
+        protected const int DEGREE_COST = 5000;
+        protected const int DIPLOMA_COST = 2500;
         protected Programme(string category, int cost)
         {
             Category = category;

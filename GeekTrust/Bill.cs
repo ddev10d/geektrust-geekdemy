@@ -10,7 +10,9 @@ namespace GeekTrust
     public class Bill
     {
         private readonly ShoppingCart cart;
-        
+        private const decimal ENROLLMENT_FEES = 500;
+        private const decimal ENROLLMENT_FEES_THRESHOLD = 6666;
+        private const decimal PRO_MEMBERSHIP_FEES = 200;
         public Bill(ShoppingCart cart)
         {
             this.cart = cart;
@@ -101,15 +103,15 @@ namespace GeekTrust
         {
             if (cart.IsProMember)
             {
-                return 200;
+                return PRO_MEMBERSHIP_FEES;
             }
             return 0;
         }
         public decimal CalculateEnrollmentFees(decimal cost)
         {
-            if(cost < 6666)
+            if(cost < ENROLLMENT_FEES_THRESHOLD)
             {
-                return 500;
+                return ENROLLMENT_FEES;
             }
             return 0;
         }
